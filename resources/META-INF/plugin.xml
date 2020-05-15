@@ -1,7 +1,7 @@
 <idea-plugin>
     <id>work.kozhn.fvb</id>
     <name>findViews</name>
-    <version>1.0</version>
+    <version>1.4</version>
     <vendor email="kozhnpc@163.com" url="http://kozhnpc.work">kozhnpc</vendor>
 
     <description><![CDATA[

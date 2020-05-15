@@ -12,6 +12,7 @@ public class IdBean extends JPanel {
     private JLabel mIdJLabel;
     private JCheckBox mClickCheckBox;
     private JTextField mFieldJTextField;
+    private JLabel mHeaderJTextField;
 
     /**
      * mEnableCheckBox接口
@@ -63,7 +64,7 @@ public class IdBean extends JPanel {
      * @param jTextField     字段名
      */
     public IdBean(LayoutManager layout, EmptyBorder emptyBorder,
-                  JCheckBox jCheckBox, JLabel jLabelId, JCheckBox jCheckBoxClick, JTextField jTextField,
+                  JCheckBox jCheckBox, JLabel jLabelId, JCheckBox jCheckBoxClick, JTextField jTextField, JLabel jTextHeader,
                   Element element) {
         super(layout);
         initLayout(layout, emptyBorder);
@@ -71,6 +72,7 @@ public class IdBean extends JPanel {
         mIdJLabel = jLabelId;
         mClickCheckBox = jCheckBoxClick;
         mFieldJTextField = jTextField;
+        mHeaderJTextField = jTextHeader;
         initComponent(element);
         addComponent();
     }
@@ -83,6 +85,7 @@ public class IdBean extends JPanel {
         this.add(mIdJLabel);
         this.add(mClickCheckBox);
         this.add(mFieldJTextField);
+        this.add(mHeaderJTextField);
     }
 
     /**
@@ -97,15 +100,17 @@ public class IdBean extends JPanel {
 
         mIdJLabel.setEnabled(element.isCreateFiled());
         mFieldJTextField.setEnabled(element.isCreateFiled());
+        mHeaderJTextField.setEnabled(false);
 
         // 设置左对齐
         mEnableCheckBox.setHorizontalAlignment(JLabel.LEFT);
         mIdJLabel.setHorizontalAlignment(JLabel.LEFT);
         mFieldJTextField.setHorizontalAlignment(JTextField.LEFT);
+        mHeaderJTextField.setHorizontalAlignment(JTextField.LEFT);
         // 监听
         mEnableCheckBox.addActionListener(e -> {
             if (mEnableListener != null) {
-                mEnableListener.setEnable(mEnableCheckBox,element);
+                mEnableListener.setEnable(mEnableCheckBox, element);
                 mIdJLabel.setEnabled(mEnableCheckBox.isSelected());
                 mFieldJTextField.setEnabled(mEnableCheckBox.isSelected());
             }

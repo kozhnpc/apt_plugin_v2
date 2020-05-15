@@ -115,19 +115,19 @@ public class FindViewByIdDialog extends JFrame implements ActionListener, IdBean
      * 添加头部
      */
     private void initTopPanel() {
-        mPanelTitle.setLayout(new GridLayout(1, 4, 10, 10));
+        mPanelTitle.setLayout(new GridLayout(1, 5, 10, 10));
         mPanelTitle.setBorder(new EmptyBorder(5, 10, 5, 10));
         mTitleId.setHorizontalAlignment(JLabel.LEFT);
         mTitleClick.setHorizontalAlignment(JLabel.LEFT);
         mTitleField.setHorizontalAlignment(JLabel.LEFT);
         // 添加到JPanel
         mPanelTitle.add(mCheckAll);
-
-        mPanelTitle.add(mHeaderView);
-
         mPanelTitle.add(mTitleId);
         mPanelTitle.add(mTitleClick);
         mPanelTitle.add(mTitleField);
+
+        mPanelTitle.add(mHeaderView);
+
         mPanelTitle.setSize(720, 30);
         // 添加到JFrame
         getContentPane().add(mPanelTitle, 0);
@@ -156,12 +156,13 @@ public class FindViewByIdDialog extends JFrame implements ActionListener, IdBean
         // 设置内容
         for (int i = 0; i < mElements.size(); i++) {
             Element mElement = mElements.get(i);
-            IdBean itemJPanel = new IdBean(new GridLayout(1, 4, 10, 10),
+            IdBean itemJPanel = new IdBean(new GridLayout(1, 5, 10, 10),
                     new EmptyBorder(5, 10, 5, 10),
                     new JCheckBox(mElement.getName()),
                     new JLabel(mElement.getId()),
                     new JCheckBox(),
                     new JTextField(mElement.getFieldName()),
+                    new JLabel(""),
                     mElement);
             // 监听
             itemJPanel.setEnableActionListener(this);
@@ -266,7 +267,6 @@ public class FindViewByIdDialog extends JFrame implements ActionListener, IdBean
             case "确定":
                 cancelDialog();
                 //开始生成代码  增加一条 记录是否需要增加mView
-                Manager.getInstance().setHasHeader(mHeaderView.isSelected());
                 setCreator();
                 break;
             case "取消":
@@ -290,7 +290,7 @@ public class FindViewByIdDialog extends JFrame implements ActionListener, IdBean
      */
     private void setCreator() {
         new ViewFieldMethodCreator(this, mEditor, mPsiFile, mClass,
-                "Generate Injections", mElements, mSelectedText)
+                "Generate Injections", mElements, mSelectedText,mHeaderView.isSelected())
                 .execute();
     }
 

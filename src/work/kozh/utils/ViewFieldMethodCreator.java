@@ -17,8 +17,6 @@ import work.kozh.widget.FindViewByIdDialog;
 
 import java.util.List;
 
-import static icons.DatabaseIcons.View;
-
 public class ViewFieldMethodCreator extends Simple {
 
     private FindViewByIdDialog mDialog;
@@ -28,8 +26,9 @@ public class ViewFieldMethodCreator extends Simple {
     private PsiClass mClass;
     private List<Element> mElements;
     private PsiElementFactory mFactory;
+    private boolean mHasHeader;
 
-    public ViewFieldMethodCreator(FindViewByIdDialog dialog, Editor editor, PsiFile psiFile, PsiClass psiClass, String command, List<Element> elements, String selectedText) {
+    public ViewFieldMethodCreator(FindViewByIdDialog dialog, Editor editor, PsiFile psiFile, PsiClass psiClass, String command, List<Element> elements, String selectedText, boolean hasHeader) {
         super(psiClass.getProject(), command);
         mDialog = dialog;
         mEditor = editor;
@@ -39,6 +38,7 @@ public class ViewFieldMethodCreator extends Simple {
         mElements = elements;
         // 获取Factory
         mFactory = JavaPsiFacade.getElementFactory(mProject);
+        mHasHeader = hasHeader;
     }
 
     @Override
@@ -61,13 +61,14 @@ public class ViewFieldMethodCreator extends Simple {
         styleManager.optimizeImports(mFile);
         styleManager.shortenClassReferences(mClass);
         new ReformatCodeProcessor(mProject, mClass.getContainingFile(), null, false).runWithoutProgress();
-        Util.showPopupBalloon(mEditor, "控件注解生成完毕", 5);
+        Util.showPopupBalloon(mEditor, "控件注解生成完毕，请手动调用findView()，并设置onClickListener()", 5);
     }
 
     /**
      * 创建变量
      */
     private void generateFields() {
+
         for (Element element : mElements) {
           /*  if (mClass.getText().contains("@InjectView(" + element.getFullID() + ")")) {
                 // 不创建新的变量
@@ -124,12 +125,13 @@ public class ViewFieldMethodCreator extends Simple {
      * 方法内判断是否需要添加头布局mView
      */
     private void findViewByIdMethod() {
-        boolean hasHeader = Manager.getInstance().isHasHeader();
+
         StringBuilder methodBuilder = new StringBuilder();
         methodBuilder.append("private void findView(){");
 
         for (Element mElement : mElements) {
-            if (hasHeader) {
+
+            if (mHasHeader) {
                 // 拼接方法的字符串
                 methodBuilder.append(mElement.getFieldName() + " = mView.findViewById(" + mElement.getFullID() + ");\n");
             } else {
@@ -140,6 +142,7 @@ public class ViewFieldMethodCreator extends Simple {
             if (mElement.isCreateClickMethod()) {
                 methodBuilder.append(mElement.getFieldName() + ".setOnClickListener(this);\n");
             }
+
         }
         //
         methodBuilder.append("}");
